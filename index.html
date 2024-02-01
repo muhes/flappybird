@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flappy Bird Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color:  #241a34;
+            color: antiquewhite;
+        }
+        canvas {
+            border: 2px solid #000;
+            color:antiquewhite;
+        }
+        
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+    <img src='pictures/character.jpg' alt="Flappy Bird" id="birdImg" style="display: none;">
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const bird = {
+            x: 50,
+            y: canvas.height / 2,
+            radius: 20,
+            velocity: 0,
+            gravity: 0.6,
+            jump: -10,
+            color: '#00f'
+        };
+
+        const pipes = [];
+        const pipeWidth = 50;
+        const pipeGap = 200;
+        let score = 0;
+        let isGameOver = false;
+
+        /*
+        function drawBird() {
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+            ctx.fillStyle = bird.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        */
+
+
+        function drawPipes() {
+            for (let i = 0; i < pipes.length; i++) {
+                const pipe = pipes[i];
+
+                ctx.fillStyle = '#0f0';
+                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+                ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
+            }
+        }
+
+        function moveBird() {
+            if (!isGameOver) {
+                bird.velocity += bird.gravity;
+                bird.y += bird.velocity;
+            }
+        }
+
+        function movePipes() {
+            for (let i = 0; i < pipes.length; i++) {
+                pipes[i].x -= 2;
+
+                if (pipes[i].x === 50 - pipeWidth) {
+                    pipes.push({
+                        x: canvas.width,
+                        topHeight: Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50
+                    });
+                }
+
+                if (pipes[i].x + pipeWidth === 0) {
+                    pipes.shift();
+                    score++;
+                }
+            }
+        }
+
+        function checkCollision() {
+            for (let i = 0; i < pipes.length; i++) {
+                if (
+                    bird.x + bird.radius > pipes[i].x &&
+                    bird.x - bird.radius < pipes[i].x + pipeWidth &&
+                    (bird.y - bird.radius < pipes[i].topHeight || bird.y + bird.radius > pipes[i].topHeight + pipeGap)
+                ) {
+                    gameOver();
+                }
+            }
+
+            if (bird.y + bird.radius > canvas.height || bird.y - bird.radius < 0) {
+                gameOver();
+            }
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            clearInterval(gameLoop);
+            alert(`Game Over! Your Score: ${score}`);
+        }
+
+        function jump() {
+            if (!isGameOver) {
+                bird.velocity = bird.jump;
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space') {
+                jump();
+            }
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const birdImg = document.getElementById('birdImg');
+            ctx.drawImage(birdImg, bird.x - bird.radius, bird.y - bird.radius, bird.radius * 2, bird.radius * 2);
+
+            //drawBird();
+            drawPipes();
+            moveBird();
+            movePipes();
+            checkCollision();
+
+            ctx.fillStyle = '#000';
+            ctx.font = '24px Arial';
+            ctx.fillText(`Score: ${score}`, 10, 30);
+        }
+
+        const gameLoop = setInterval(draw, 20);
+        pipes.push({
+            x: canvas.width,
+            topHeight: Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50
+        });
+    </script>
+</body>
+</html>
