@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple JavaScript Game</title>
+    <style>
+        #game {
+            position: relative;
+            width: 800px; /* Increase the width */
+            height: 400px; /* Increase the height */
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        #character {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #00f;
+        }
+
+        #obstacle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #f00;
+        }
+
+        #bonus {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #0f0;
+        }
+
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple JavaScript Game</h1>
+    <p>Use the arrow keys to control the blue square and avoid the red obstacles. Collect the green bonuses for extra points.</p>
+    <div id="game">
+        <div id="character"></div>
+        <div id="obstacle"></div>
+        <div id="bonus"></div>
+    </div>
+    <p id="score">Score: 0</p>
+    <button id="restartButton">Restart Game</button>
+
+    <script>
+        // The JavaScript code remains the same as the previous example.
+        // ...
+    </script>
+</body>
+</html>
